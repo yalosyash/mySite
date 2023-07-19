@@ -7,6 +7,7 @@
     --underline: #444444;
     --sectionbg: #1c1c1e;
     --buttoncolor: #ffffff;
+    --hoverbuttoncolor: #945922;
   }
 }
 
@@ -19,11 +20,12 @@
     --underline: #dadada;
     --sectionbg: #ffffff;
     --buttoncolor: #ffffff;
+    --hoverbuttoncolor: #945922;
   }
 }
 
 body {
-  font-family: "Helvetica";
+  font-family: "Roboto", sans-serif;
   background-color: var(--bg);
   color: var(--text);
   display: flex;
@@ -36,18 +38,18 @@ body {
   margin: 40px 0;
 }
 
-.header__avatar {
+.header_avatar {
   border-radius: 50%;
 }
 
-.header__title {
+.header_title {
   margin: 30px 0 10px 0;
   font-size: 32px;
   line-height: 1.2;
-  font-family: "Helvetica Neue";
+  font-family: "Roboto", sans-serif;
 }
 
-.header__subtitle {
+.header_subtitle {
   color: var(--subtext);
   font-size: 16px;
   line-height: 1.4;
@@ -59,14 +61,16 @@ body {
   margin-bottom: 40px;
 }
 
-.links__header {
-  font-family: "Helvetica Neue";
+.phrases_header,
+.links_header {
+  font-family: "Roboto", sans-serif;
   font-size: 24px;
   line-height: 1.4;
   margin: 0 0 15px 0;
 }
 
-.links__container {
+.phrases_container,
+.links_container {
   list-style-type: none;
   background: var(--sectionbg);
   border-radius: 10px;
@@ -82,13 +86,16 @@ body {
   margin: 0;
 }
 
-.links__link,
-.links__title {
+.phrases,
+.links_link,
+.links_title,
+.phrase_title {
   font-size: 14px;
   font-size: 1.4;
 }
 
-.links__link {
+.phrases,
+.links_link {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -98,26 +105,27 @@ body {
   width: 280px;
 }
 
-.links__link:last-child {
+.phrases,
+.links_link:last-child {
   border-bottom: none;
 }
 
-.linsk__link,
-.links__link:visited {
+.links_links,
+.links_link:visited {
   text-decoration: none;
   color: var(--linktext);
 }
 
-.links__title {
+.links_title,
+.phrase_title {
   margin: 0;
   min-width: 100px;
 }
 
-.phrase_title
-
-footer {
+.footer {
   margin: 0 0 40px 0;
 }
+
 .button-link {
   box-sizing: border-box;
   display: flex;
@@ -138,3 +146,10 @@ footer {
   color: var(--buttoncolor);
   text-decoration: none;
 }
+
+.button-link:hover { 
+  outline: red;
+  background: var(--hoverbuttoncolor); 
+  transition: 0.1s;
+  width: 325px;
+ }
