@@ -1,5 +1,19 @@
 @media (prefers-color-scheme: dark) {
   :root {
+    --bg: #f5f5f5;
+    --text: #000000;
+    --subtext: #8f8f8f;
+    --linktext: #cb782f;
+    --underline: #dadada;
+    --sectionbg: #ffffff;
+    --buttoncolor: #ffffff;
+    --hoverbuttoncolor: #945922;
+  }
+}
+
+/* пока не хочу использовать
+@media (prefers-color-scheme: dark) {
+  :root {
     --bg: #010101;
     --text: #ffffff;
     --subtext: #8f8f8f;
@@ -10,6 +24,7 @@
     --hoverbuttoncolor: #945922;
   }
 }
+*/
 
 @media (prefers-color-scheme: light) {
   :root {
@@ -50,6 +65,7 @@ body {
 }
 
 .header_subtitle {
+  
   color: var(--subtext);
   font-size: 16px;
   line-height: 1.4;
@@ -61,7 +77,6 @@ body {
   margin-bottom: 40px;
 }
 
-.phrases_header,
 .links_header {
   font-family: "Roboto", sans-serif;
   font-size: 24px;
@@ -69,7 +84,6 @@ body {
   margin: 0 0 15px 0;
 }
 
-.phrases_container,
 .links_container {
   list-style-type: none;
   background: var(--sectionbg);
@@ -86,15 +100,12 @@ body {
   margin: 0;
 }
 
-.phrases,
 .links_link,
-.links_title,
-.phrase_title {
+.links_title {
   font-size: 14px;
   font-size: 1.4;
 }
 
-.phrases,
 .links_link {
   display: flex;
   flex-direction: row;
@@ -105,7 +116,6 @@ body {
   width: 280px;
 }
 
-.phrases,
 .links_link:last-child {
   border-bottom: none;
 }
@@ -116,8 +126,7 @@ body {
   color: var(--linktext);
 }
 
-.links_title,
-.phrase_title {
+.links_title {
   margin: 0;
   min-width: 100px;
 }
@@ -148,8 +157,62 @@ body {
 }
 
 .button-link:hover { 
-  outline: red;
   background: var(--hoverbuttoncolor); 
   transition: 0.1s;
   width: 325px;
  }
+
+.about {
+  width: 320px;
+  margin-bottom: 40px;
+}
+
+ .phrases_header {
+  font-family: "Roboto", sans-serif;
+  font-size: 24px;
+  line-height: 1.4;
+  margin: 0 0 15px 0;
+}
+
+.phrases_container {
+  list-style-type: none;
+  background: var(--sectionbg);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px 20px 10px;
+  gap: 10px;
+  flex: none;
+  order: 1;
+  flex-grow: 0;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.phrases {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0px 0px 10px;
+  gap: 30px;
+  border-bottom: 1px solid var(--underline);
+  width: 280px;
+  font-size: 14px;
+  font-size: 1.4;
+}
+
+.phrases:last-child {
+  border-bottom: none;
+}
+
+.phrase_title {
+  margin: 0;
+  min-width: 100px;
+  font-size: 14px;
+  font-size: 1.4;
+}
+
+.hide {
+  display: none;
+}

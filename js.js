@@ -1,7 +1,11 @@
 /* Это объявление переменной, мы нашли кнопку по тегу */
-const button = document.querySelector('button');
-
+let button = document.querySelector('.button-link');
+let about = document.getElementById("about");
 /* Тут на кнопку навешиваем обрабочик, который ждёт клика и тогда запустит логику */
-button.addEventListener('click', function() {
-	alert('Дорогу осилит идущий!')
+button.addEventListener ('click',
+function toggleClass(){
+	about.classList.remove("hide");
+	about.classList.add("about");
+	// alert(about.className);  
 })
+
