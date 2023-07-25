@@ -11,21 +11,6 @@
   }
 }
 
-/* пока не хочу использовать
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #010101;
-    --text: #ffffff;
-    --subtext: #8f8f8f;
-    --linktext: #cb782f;
-    --underline: #444444;
-    --sectionbg: #1c1c1e;
-    --buttoncolor: #ffffff;
-    --hoverbuttoncolor: #945922;
-  }
-}
-*/
-
 @media (prefers-color-scheme: light) {
   :root {
     --bg: #f5f5f5;
@@ -65,25 +50,25 @@ body {
 }
 
 .header_subtitle {
-  
   color: var(--subtext);
   font-size: 16px;
   line-height: 1.4;
   margin: 0;
 }
 
-.links {
+.links_section {
   width: 320px;
   margin-bottom: 40px;
 }
 
-.links_header {
+h2 {
   font-family: "Roboto", sans-serif;
   font-size: 24px;
   line-height: 1.4;
   margin: 0 0 15px 0;
 }
 
+.phrases_container,
 .links_container {
   list-style-type: none;
   background: var(--sectionbg);
@@ -100,13 +85,13 @@ body {
   margin: 0;
 }
 
-.links_link,
+.links_list,
 .links_title {
   font-size: 14px;
   font-size: 1.4;
 }
 
-.links_link {
+.links_list {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
@@ -116,12 +101,12 @@ body {
   width: 280px;
 }
 
-.links_link:last-child {
+.links_list:last-child {
   border-bottom: none;
 }
 
-.links_links,
-.links_link:visited {
+.link,
+.links_list:visited {
   text-decoration: none;
   color: var(--linktext);
 }
@@ -165,29 +150,6 @@ body {
 .about {
   width: 320px;
   margin-bottom: 40px;
-}
-
- .phrases_header {
-  font-family: "Roboto", sans-serif;
-  font-size: 24px;
-  line-height: 1.4;
-  margin: 0 0 15px 0;
-}
-
-.phrases_container {
-  list-style-type: none;
-  background: var(--sectionbg);
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 20px 20px 10px;
-  gap: 10px;
-  flex: none;
-  order: 1;
-  flex-grow: 0;
-  box-sizing: border-box;
-  margin: 0;
 }
 
 .phrases {
