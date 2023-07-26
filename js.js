@@ -5,7 +5,7 @@ let about = document.getElementById("about");
 
 //Тут на кнопку навешиваем обрабочик, который ждёт клика и тогда запустит логику
 button.onclick = function () {        
-	//по клику на кнопку выполняется функция с циклом внутри
+	//по клику на кнопку выполняется функция с условием внутри
 	if (button.innerText === 'Обо мне') {
 		about.classList.toggle('hidden');
 		button.innerText = ('Свернуть');
