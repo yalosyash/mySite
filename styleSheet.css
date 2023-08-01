@@ -1,27 +1,12 @@
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #f5f5f5;
-    --text: #000000;
-    --subtext: #8f8f8f;
-    --linktext: #cb782f;
-    --underline: #dadada;
-    --sectionbg: #ffffff;
-    --buttoncolor: #ffffff;
-    --hoverbuttoncolor: #945922;
-  }
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg: #f5f5f5;
-    --text: #000000;
-    --subtext: #8f8f8f;
-    --linktext: #cb782f;
-    --underline: #dadada;
-    --sectionbg: #ffffff;
-    --buttoncolor: #ffffff;
-    --hoverbuttoncolor: #945922;
-  }
+:root {
+  --bg: #f5f5f5;
+  --text: #000000;
+  --subtext: #8f8f8f;
+  --linktext: #cb782f;
+  --underline: #dadada;
+  --sectionbg: #ffffff;
+  --buttoncolor: #ffffff;
+  --hoverbuttoncolor: #945922;
 }
 
 body {
