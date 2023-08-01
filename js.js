@@ -1,18 +1,16 @@
-// Это объявление переменной, мы нашли кнопку по тегу
-const button = document.querySelector('.button');
 // Объявление переменной для скрытого блока, нашли по Id
-let about = document.getElementById("about");
+const about = document.getElementById('about');
 
-//Тут на кнопку навешиваем обрабочик, который ждёт клика и тогда запустит логику
-button.onclick = function () {        
+// Тут на кнопку навешиваем обрабочик, который ждёт клика и тогда запустит логику
+function onClickButton(el) {        
 	//по клику на кнопку выполняется функция с условием внутри
-	if (button.innerText === 'Обо мне') {
+	if (el.textContent == 'Обо мне') {
 		about.classList.toggle('hidden');
-		button.innerText = ('Свернуть');
+		el.innerText = ('Свернуть');
 		//если текст на кнопке "Обо мне", то открывается блок и меняется текст на "Свернуть"
 	} else {
 		about.classList.toggle('hidden');
-		button.innerText = ('Обо мне');
+		el.innerText = ('Обо мне');
 		//если текст на кнопке "Свернуть", то блок сворачивается и меняется текст на "Обо мне"
 	}
 };
