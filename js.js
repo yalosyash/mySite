@@ -1,16 +1,7 @@
-// Объявление переменной для скрытого блока, нашли по Id
-const about = document.getElementById('about');
-
-// Тут на кнопку навешиваем обрабочик, который ждёт клика и тогда запустит логику
-function onClickButton(el) {        
-	//по клику на кнопку выполняется функция с условием внутри
-	if (el.textContent == 'Обо мне') {
-		about.classList.toggle('hidden');
-		el.innerText = ('Свернуть');
-		//если текст на кнопке "Обо мне", то открывается блок и меняется текст на "Свернуть"
-	} else {
-		about.classList.toggle('hidden');
-		el.innerText = ('Обо мне');
-		//если текст на кнопке "Свернуть", то блок сворачивается и меняется текст на "Обо мне"
-	}
+const about = document.querySelector('.about');
+const button = document.querySelector('.button');
+button.onclick = function() {
+	const text = ["Обо мне", "Свернуть"];
+	about.classList.toggle("hidden");
+	(button.textContent === text[0]) ? button.innerText = text[1] : button.innerText = text[0];
 };
