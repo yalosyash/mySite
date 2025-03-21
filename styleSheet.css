@@ -24,7 +24,11 @@ body {
 }
 
 .header_avatar {
-  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
 }
 
 .header_title {
@@ -41,7 +45,8 @@ body {
   margin: 0;
 }
 
-.links_section {
+.links_section,
+.about {
   width: 320px;
   margin-bottom: 40px;
 }
@@ -117,7 +122,6 @@ button {
   border-radius: 20px;
   border: none;
   outline: none;
-  
 
   font-size: 14px;
   line-height: 1.4;
@@ -126,15 +130,10 @@ button {
   text-decoration: none;
 }
 
-button:hover { 
-  background: var(--hoverbuttoncolor); 
+button:hover {
+  background: var(--hoverbuttoncolor);
   transition: 0.1s;
   width: 325px;
- }
-
-.about {
-  width: 320px;
-  margin-bottom: 40px;
 }
 
 .phrases {
