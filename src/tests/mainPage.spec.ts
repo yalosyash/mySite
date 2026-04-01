@@ -2,8 +2,7 @@ import { test, expect } from "@playwright/test";
 import { elements } from "./ts/elements/elements";
 
 test.beforeEach(async ({ page }) => {
-  // await page.goto("https://yalosyash.github.io/mySite/");
-  await page.goto("http://127.0.0.1:5500/index.html");
+  await page.goto("https://yalosyash.github.io/mySite/");
 });
 
 test.describe("Отображение страницы", () => {
