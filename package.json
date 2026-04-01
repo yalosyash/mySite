@@ -1,0 +1,22 @@
+{
+  "name": "mysite",
+  "version": "1.0.0",
+  "description": "Простой сайт с моим профилем и контактной информацией с использованием HTML+CSS+JS",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yalosyash/mySite.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yalosyash/mySite/issues"
+  },
+  "homepage": "https://github.com/yalosyash/mySite#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.59.0",
+    "@types/node": "^25.5.0"
+  }
+}
