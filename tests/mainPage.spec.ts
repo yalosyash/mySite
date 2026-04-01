@@ -2,6 +2,7 @@ import { test, expect, Page, Locator } from "@playwright/test";
 
 interface Elements {
   locator: (page: Page) => Locator;
+  text?: string;
   name: string;
   attribute?: {
     type: string;
@@ -12,16 +13,24 @@ interface Elements {
 const elements: Elements[] = [
   {
     locator: (page: Page): Locator => page.getByRole("img", { name: "avatar" }),
-    name: "avatar",
+    name: "avatar img",
+  },
+  {
+    locator: (page: Page): Locator =>
+      page.getByRole("heading", { name: "QA Engineer" }),
+    text: "QA Engineer",
+    name: "QA Engineer heading",
   },
   {
     locator: (page: Page): Locator =>
       page.getByRole("heading", { name: "Владислав Клепиков" }),
+    text: "Владислав Клепиков",
     name: "Владислав Клепиков heading",
   },
   {
     locator: (page: Page): Locator =>
       page.getByRole("heading", { name: "Связь со мной" }),
+    text: "Связь со мной",
     name: "Связь со мной heading",
   },
 
@@ -81,20 +90,8 @@ const elements: Elements[] = [
   {
     locator: (page: Page): Locator =>
       page.getByRole("button", { name: "Обо мне" }),
+    text: "Обо мне",
     name: "Обо мне button",
-  },
-];
-
-const aboutMe = [
-  {
-    locator: (page: Page): Locator =>
-      page.getByRole("heading", { name: "Обо мне" }),
-    name: "Обо мне heading",
-  },
-  {
-    locator: (page: Page): Locator =>
-      page.getByRole("button", { name: "Свернуть" }),
-    name: "Свернуть button",
   },
 ];
 
@@ -108,6 +105,16 @@ test.describe("Отображение страницы", () => {
       test.step(`Отображение элемента ${name}`, async () => {
         await expect.soft(locator(page)).toBeVisible();
       });
+    });
+  });
+
+  test("Отображение текста элементов страницы", async ({ page }) => {
+    elements.forEach(({ locator, name, text }) => {
+      if (text) {
+        test.step(`Отображение текста ${text} у элемента ${name}`, async () => {
+          await expect.soft(locator(page)).toHaveText(text);
+        });
+      }
     });
   });
 });
@@ -128,8 +135,6 @@ test.describe("Сравнение ссылок в списке ссылок", ()
 
 test.describe("Работоспособность кнопок", () => {
   test("Работоспособность кнопки 'Обо мне'", async ({ page }) => {
-    await expect(page.getByRole("button", { name: "Обо мне" })).toHaveText("Обо мне");
-
     await page.getByRole("button", { name: "Обо мне" }).click();
 
     await expect(page.getByRole("button")).toHaveText("Свернуть");
