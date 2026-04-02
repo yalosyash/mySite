@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { elements } from "./ts/elements/elements";
+import { buttons } from "./ts/elements/buttons";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("https://yalosyash.github.io/mySite/");
@@ -55,5 +56,16 @@ test.describe("Работоспособность кнопок", () => {
     await page.getByRole("button", { name: "Свернуть" }).click();
     await expect(page.getByRole("button")).toHaveText("Обо мне");
     await expect(page.getByRole("heading", { name: "Обо мне" })).toBeHidden();
+  });
+
+  buttons.forEach((value) => {
+    test(`Отображение изменения, при нажатии кнопки ${value}`, async ({
+      page,
+    }) => {
+      if (value === "Свернуть") {
+        await page.getByRole("button").click();
+      }
+      await expect(page).toHaveScreenshot(`pageWith${value}Button.png`);
+    });
   });
 });
