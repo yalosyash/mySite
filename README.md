@@ -1,5 +1,9 @@
-[![Playwright Tests](https://github.com/yalosyash/mySite/actions/workflows/playwright.yml/badge.svg)](https://github.com/yalosyash/mySite/actions/workflows/playwright.yml)
-## Мой сайт визитка
-Простой сайт с моим профилем и контактной информацией с использованием HTML+CSS+JS. UI покрыт тестами на платформе [Playwright](https://playwright.dev/)
+## Мой сайт визитка [![Playwright Tests](https://github.com/yalosyash/mySite/actions/workflows/playwright.yml/badge.svg)](https://github.com/yalosyash/mySite/actions/workflows/playwright.yml)
+Простой сайт с моим профилем и контактной информацией с использованием технологий: 
+* HTML
+* CSS
+* JavaScript
+* TypeScript
+* Playwright 
 
-(в процессе разработки)
+UI покрыт тестами на платформе [Playwright](https://playwright.dev/)
