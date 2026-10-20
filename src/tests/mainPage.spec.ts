@@ -1,12 +1,15 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, Page } from "@playwright/test";
 import { elements } from "./ts/elements/elements";
 import { buttons } from "./ts/elements/buttons";
 
-const baseURL = "https://yalosyash.github.io/mySite/";
+const snapshotNames: Record<string, string> = {
+  "Обо мне": "AboutMe",
+  Свернуть: "Collapse",
+};
 
-async function openPage(page: any) {
-  await page.route("https://mc.yandex.ru/**", (route: any) => route.abort());
-  await page.goto(baseURL, { waitUntil: "domcontentloaded" });
+async function openPage(page: Page): Promise<void> {
+  await page.route("https://mc.yandex.ru/**", (route) => route.abort());
+  await page.goto("", { waitUntil: "domcontentloaded" });
 }
 
 test.beforeEach(async ({ page }) => {
@@ -16,14 +19,18 @@ test.beforeEach(async ({ page }) => {
 test.describe("Отображение страницы", () => {
   test("Отображение элементов страницы", async ({ page }) => {
     for (const { locator, name } of elements) {
-      await expect(locator(page)).toBeVisible();
+      await test.step(name, async () => {
+        await expect(locator(page), name).toBeVisible();
+      });
     }
   });
 
   test("Отображение текста элементов страницы", async ({ page }) => {
     for (const { locator, name, text } of elements) {
       if (text) {
-        await expect(locator(page)).toHaveText(text);
+        await test.step(name, async () => {
+          await expect(locator(page), name).toHaveText(text);
+        });
       }
     }
   });
@@ -33,10 +40,12 @@ test.describe("Сравнение ссылок в списке ссылок", ()
   test("Присутствие атрибутов href в ссылках", async ({ page }) => {
     for (const { locator, name, attribute } of elements) {
       if (attribute) {
-        await expect(locator(page)).toHaveAttribute(
-          attribute?.type,
-          attribute?.value,
-        );
+        await test.step(name, async () => {
+          await expect(locator(page), name).toHaveAttribute(
+            attribute.type,
+            attribute.value,
+          );
+        });
       }
     }
   });
@@ -44,19 +53,22 @@ test.describe("Сравнение ссылок в списке ссылок", ()
 
 test.describe("Работоспособность кнопок", () => {
   test("Работоспособность кнопки 'Обо мне'", async ({ page }) => {
-    await page.getByRole("button", { name: "Обо мне" }).click();
+    const aboutButton = page.getByRole("button", { name: "Обо мне" });
+    const collapseButton = page.getByRole("button", { name: "Свернуть" });
 
-    await expect(page.getByRole("button")).toHaveText("Свернуть");
+    await aboutButton.click();
+
+    await expect(collapseButton).toBeVisible();
     await expect(page.getByRole("heading", { name: "Обо мне" })).toBeVisible();
     await expect(
       page.getByText(
         "Практикующий QA Automation Занимаюсь самообразованием в сфере IT",
       ),
     ).toBeVisible();
-    await expect(page.getByRole("button", { name: "Свернуть" })).toBeVisible();
 
-    await page.getByRole("button", { name: "Свернуть" }).click();
-    await expect(page.getByRole("button")).toHaveText("Обо мне");
+    await collapseButton.click();
+
+    await expect(aboutButton).toBeVisible();
     await expect(page.getByRole("heading", { name: "Обо мне" })).toBeHidden();
   });
 
@@ -65,9 +77,11 @@ test.describe("Работоспособность кнопок", () => {
       page,
     }) => {
       if (value === "Свернуть") {
-        await page.getByRole("button").click();
+        await page.getByRole("button", { name: "Обо мне" }).click();
       }
-      await expect(page).toHaveScreenshot(`pageWith${value}Button.png`);
+      await expect(page).toHaveScreenshot(
+        `pageWith${snapshotNames[value]}Button.png`,
+      );
     });
   });
 });
