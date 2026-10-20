@@ -1,12 +1,11 @@
 const about = document.getElementById("about");
 const buttonAbout = document.getElementById("buttonAbout");
 
-buttonAbout.addEventListener("click", function () {
-  if (about.classList.contains("hidden")) {
-    about.classList.remove("hidden");
-    buttonAbout.innerText = "Свернуть";
-  } else {
-    about.classList.add("hidden");
-    buttonAbout.innerText = "Обо мне";
-  }
-});
+if (about && buttonAbout) {
+  buttonAbout.addEventListener("click", function () {
+    const isHidden = about.classList.contains("hidden");
+    about.classList.toggle("hidden");
+    buttonAbout.innerText = isHidden ? "Свернуть" : "Обо мне";
+    buttonAbout.setAttribute("aria-expanded", String(!isHidden));
+  });
+}
