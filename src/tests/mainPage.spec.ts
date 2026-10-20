@@ -9,16 +9,18 @@ async function openPage(page: any) {
   await page.goto(baseURL, { waitUntil: "domcontentloaded" });
 }
 
+test.beforeEach(async ({ page }) => {
+  await openPage(page);
+});
+
 test.describe("Отображение страницы", () => {
   test("Отображение элементов страницы", async ({ page }) => {
-    await openPage(page);
     for (const { locator, name } of elements) {
       await expect(locator(page)).toBeVisible();
     }
   });
 
   test("Отображение текста элементов страницы", async ({ page }) => {
-    await openPage(page);
     for (const { locator, name, text } of elements) {
       if (text) {
         await expect(locator(page)).toHaveText(text);
@@ -29,7 +31,6 @@ test.describe("Отображение страницы", () => {
 
 test.describe("Сравнение ссылок в списке ссылок", () => {
   test("Присутствие атрибутов href в ссылках", async ({ page }) => {
-    await openPage(page);
     for (const { locator, name, attribute } of elements) {
       if (attribute) {
         await expect(locator(page)).toHaveAttribute(
@@ -43,8 +44,6 @@ test.describe("Сравнение ссылок в списке ссылок", ()
 
 test.describe("Работоспособность кнопок", () => {
   test("Работоспособность кнопки 'Обо мне'", async ({ page }) => {
-    await openPage(page);
-
     await page.getByRole("button", { name: "Обо мне" }).click();
 
     await expect(page.getByRole("button")).toHaveText("Свернуть");
@@ -65,7 +64,6 @@ test.describe("Работоспособность кнопок", () => {
     test(`Отображение изменения, при нажатии кнопки ${value}`, async ({
       page,
     }) => {
-      await openPage(page);
       if (value === "Свернуть") {
         await page.getByRole("button").click();
       }
