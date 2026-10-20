@@ -1,5 +1,5 @@
 import { Locator, Page } from "@playwright/test";
-import { Elements } from "../interface/Interfaces";
+import { Elements } from "../interface/interfaces";
 
 export const elements: Elements[] = [
   {
