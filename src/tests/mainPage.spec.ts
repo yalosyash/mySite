@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { elements } from "./ts/elements/Elements";
-import { buttons } from "./ts/elements/Buttons";
+import { elements } from "./ts/elements/elements";
+import { buttons } from "./ts/elements/buttons";
 
 const baseURL = "https://yalosyash.github.io/mySite/";
 
