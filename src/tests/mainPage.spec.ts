@@ -15,9 +15,12 @@ const snapshotNames: Record<string, string> = {
  * пропускается, а не падает: основной CI остаётся зелёным, а сгенерировать
  * недостающие эталоны можно воркфлоу "Update Linux Snapshots".
  */
-function snapshotPath(testInfo: {
-  project: { name: string };
-}, name: string): string {
+function snapshotPath(
+  testInfo: {
+    project: { name: string };
+  },
+  name: string,
+): string {
   return join(
     __dirname,
     "mainPage.spec.ts-snapshots",
@@ -141,6 +144,35 @@ test.describe("Работоспособность кнопки 'Обо мне'",
 
     await expect(aboutDetails(page)).toHaveAttribute("open", /.*/);
     await expect(page.getByText("Практикующий QA Automation")).toBeVisible();
+  });
+});
+
+test.describe("Футер", () => {
+  test("Год берётся из системной даты", async ({ page }) => {
+    await page.clock.install({ time: new Date("2031-05-15T10:00:00Z") });
+    await openPage(page);
+
+    const year = page.locator("#year");
+
+    await expect(year).toHaveText("2031");
+    await expect(year).toHaveAttribute("datetime", "2031");
+    await expect(page.locator(".site-footer")).toContainText(
+      "© 2031 Владислав Клепиков",
+    );
+  });
+
+  test("Без JavaScript год всё равно отображается", async ({ browser }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false });
+    const page = await context.newPage();
+
+    await openPage(page);
+
+    await expect(page.locator("#year")).toHaveText(/^\d{4}$/);
+    await expect(page.locator(".site-footer")).toContainText(
+      "Владислав Клепиков",
+    );
+
+    await context.close();
   });
 });
 
