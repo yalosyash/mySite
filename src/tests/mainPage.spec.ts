@@ -120,7 +120,7 @@ test.describe("Сравнение ссылок в списке ссылок", ()
 test.describe("Работоспособность кнопки 'Обо мне'", () => {
   test("Секция 'Обо мне' скрыта по умолчанию", async ({ page }) => {
     await expect(aboutDetails(page)).not.toHaveAttribute("open", /.*/);
-    await expect(page.getByText("около 500 автотестов")).toBeHidden();
+    await expect(page.getByText("более 500 автотестов")).toBeHidden();
   });
 
   test("Раскрытие и сворачивание секции 'Обо мне'", async ({ page }) => {
@@ -134,13 +134,13 @@ test.describe("Работоспособность кнопки 'Обо мне'",
     await expect(
       page.getByRole("region", { name: "Связь со мной" }),
     ).toBeVisible();
-    await expect(page.getByText("около 500 автотестов")).toBeVisible();
+    await expect(page.getByText("более 500 автотестов")).toBeVisible();
 
     await summary.click();
 
     await expect(details).not.toHaveAttribute("open", /.*/);
     await expect(summary).toHaveText("Обо мне", { useInnerText: true });
-    await expect(page.getByText("около 500 автотестов")).toBeHidden();
+    await expect(page.getByText("более 500 автотестов")).toBeHidden();
   });
 
   test("Секция 'Обо мне' раскрывается с клавиатуры", async ({ page }) => {
@@ -150,7 +150,7 @@ test.describe("Работоспособность кнопки 'Обо мне'",
     await page.keyboard.press("Enter");
 
     await expect(aboutDetails(page)).toHaveAttribute("open", /.*/);
-    await expect(page.getByText("около 500 автотестов")).toBeVisible();
+    await expect(page.getByText("более 500 автотестов")).toBeVisible();
   });
 
   test("В секции есть стек технологий и статус поиска", async ({ page }) => {

@@ -385,6 +385,11 @@ img {
   stroke-linejoin: round;
 }
 
+/* Строчные «hh» тоньше сливаются в мелком размере — ведём штрих плотнее */
+.link__icon--hh {
+  stroke-width: 2.2;
+}
+
 .link__body {
   display: grid;
   gap: 0.1rem;
