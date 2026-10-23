@@ -61,16 +61,6 @@ export const elements: Elements[] = [
   },
   {
     locator: (page: Page): Locator =>
-      page.getByRole("link", { name: "Head Hunter Владислав Клепиков" }),
-    name: "Head Hunter",
-    attribute: {
-      type: "href",
-      value:
-        "https://domodedovo.hh.ru/resume/0f8c5712ff0c4649760039ed1f6f506753764c",
-    },
-  },
-  {
-    locator: (page: Page): Locator =>
       page.getByRole("link", { name: "Мое резюме Google Docs" }),
     name: "Мое резюме",
     attribute: {
