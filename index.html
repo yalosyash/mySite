@@ -25,12 +25,34 @@
     <link rel="icon" href="src/main/assets/avatar.png" />
     <link rel="preload" as="image" href="src/main/assets/avatar.png" />
     <link rel="stylesheet" href="src/main/css/styles.css" />
+    <!-- Без defer: тема должна примениться до первой отрисовки -->
+    <script src="src/main/js/theme.js"></script>
     <title>Владислав Клепиков — QA Engineer</title>
   </head>
   <body>
     <div class="glow" aria-hidden="true"></div>
 
     <main class="card">
+      <button
+        class="theme-toggle"
+        type="button"
+        data-theme-toggle
+        aria-label="Переключить тему"
+      >
+        <svg
+          class="theme-toggle__icon theme-toggle__icon--sun"
+          aria-hidden="true"
+        >
+          <use href="src/main/assets/icons.svg#sun" />
+        </svg>
+        <svg
+          class="theme-toggle__icon theme-toggle__icon--moon"
+          aria-hidden="true"
+        >
+          <use href="src/main/assets/icons.svg#moon" />
+        </svg>
+      </button>
+
       <header class="hero">
         <img
           class="hero__avatar"

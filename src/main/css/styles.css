@@ -156,6 +156,7 @@ img {
 
 /* ---------- Карточка ---------- */
 .card {
+  position: relative;
   width: min(100%, 38rem);
   padding: clamp(1.5rem, 4vw, 2.75rem);
   display: grid;
@@ -167,6 +168,94 @@ img {
   box-shadow: var(--shadow-card);
   backdrop-filter: blur(18px) saturate(140%);
   animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ---------- Переключатель темы ---------- */
+.theme-toggle {
+  position: absolute;
+  top: clamp(0.9rem, 2.5vw, 1.25rem);
+  right: clamp(0.9rem, 2.5vw, 1.25rem);
+  z-index: 2;
+
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0.5rem;
+
+  color: var(--ink-muted);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  cursor: pointer;
+
+  transition:
+    color 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.theme-toggle__icon {
+  grid-area: 1 / 1;
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* В светлой теме показываем луну (что будет при клике),
+   в тёмной — солнце. Иконка меняется по data-theme на <html>. */
+.theme-toggle__icon--sun {
+  opacity: 0;
+  transform: rotate(-40deg) scale(0.6);
+}
+
+.theme-toggle__icon--moon {
+  opacity: 1;
+  transform: rotate(0) scale(1);
+}
+
+:root[data-theme="dark"] .theme-toggle__icon--sun {
+  opacity: 1;
+  transform: rotate(0) scale(1);
+}
+
+:root[data-theme="dark"] .theme-toggle__icon--moon {
+  opacity: 0;
+  transform: rotate(40deg) scale(0.6);
+}
+
+/* Системная тёмная тема без явного выбора пользователя */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle__icon--sun {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+
+  :root:not([data-theme="light"]) .theme-toggle__icon--moon {
+    opacity: 0;
+    transform: rotate(40deg) scale(0.6);
+  }
+}
+
+@media (hover: hover) {
+  .theme-toggle:hover {
+    color: var(--accent);
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+    transform: scale(1.06);
+  }
+}
+
+.theme-toggle:active {
+  transform: scale(0.96);
 }
 
 @keyframes rise {

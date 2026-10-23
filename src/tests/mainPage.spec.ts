@@ -35,7 +35,10 @@ function snapshotPath(
  */
 function isUpdatingSnapshots(): boolean {
   return process.argv.some(
-    (arg) => arg === "--update-snapshots" || arg === "-u",
+    (arg) =>
+      arg === "-u" ||
+      arg === "--update-snapshots" ||
+      arg.startsWith("--update-snapshots="),
   );
 }
 
@@ -173,6 +176,85 @@ test.describe("Футер", () => {
     );
 
     await context.close();
+  });
+});
+
+test.describe("Переключатель темы", () => {
+  const toggle = (page: Page) => page.locator("[data-theme-toggle]");
+
+  test("По умолчанию тема следует за системной", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "light" });
+    await openPage(page);
+
+    await expect(toggle(page)).toBeVisible();
+    await expect(toggle(page)).toHaveAttribute("aria-pressed", "false");
+    await expect(page.locator("html")).not.toHaveAttribute("data-theme", /.*/);
+    await expect(toggle(page)).toHaveAttribute("title", "Включить тёмную тему");
+  });
+
+  test("Системная тёмная тема включает тёмное оформление", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "dark" });
+    await openPage(page);
+
+    await expect(toggle(page)).toHaveAttribute("aria-pressed", "true");
+    await expect(toggle(page)).toHaveAttribute(
+      "title",
+      "Включить светлую тему",
+    );
+  });
+
+  test("Клик переключает тему и запоминает выбор", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "light" });
+    await openPage(page);
+
+    const html = page.locator("html");
+
+    await expect(html).not.toHaveAttribute("data-theme", /.*/);
+
+    await toggle(page).click();
+    await expect(html).toHaveAttribute("data-theme", "dark");
+    await expect(toggle(page)).toHaveAttribute("aria-pressed", "true");
+
+    await toggle(page).click();
+    await expect(html).toHaveAttribute("data-theme", "light");
+    await expect(toggle(page)).toHaveAttribute("aria-pressed", "false");
+  });
+
+  test("Выбранная тема переживает перезагрузку", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "light" });
+    await openPage(page);
+
+    await toggle(page).click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+
+    await page.reload();
+
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await expect(toggle(page)).toHaveAttribute("aria-pressed", "true");
+  });
+
+  test("Выбор пользователя важнее системной темы", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "dark" });
+    await openPage(page);
+
+    /* Система тёмная, пользователь переключает на светлую */
+    await toggle(page).click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+
+    await page.reload();
+
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await expect(toggle(page)).toHaveAttribute("aria-pressed", "false");
+  });
+
+  test("Переключатель доступен с клавиатуры", async ({ page }) => {
+    await page.emulateMedia({ colorScheme: "light" });
+    await openPage(page);
+
+    await toggle(page).focus();
+    await page.keyboard.press("Enter");
+
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   });
 });
 
