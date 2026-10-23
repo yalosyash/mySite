@@ -119,8 +119,8 @@ test.describe("Секция 'Обо мне'", () => {
   });
 
   test("Секция идёт перед блоком контактов", async ({ page }) => {
-    /* Сравниваем порядок в DOM, а не координаты: на широком экране блоки
-       стоят в две колонки, и вертикальные позиции у них совпадают. */
+    /* Сравниваем порядок в DOM, а не координаты: раскладка может меняться,
+       а требование к разметке — нет. */
     const order = await page.evaluate(() => {
       const about = document.querySelector("section.about");
       const contacts = document.querySelector(".contacts");
@@ -165,6 +165,36 @@ test.describe("Секция 'Обо мне'", () => {
       overflow,
       "горизонтальной прокрутки быть не должно",
     ).toBeLessThanOrEqual(0);
+  });
+
+  test("Ширина текста не меняется при сужении окна", async ({ page }) => {
+    /* Отступ карточки был задан в vw. Карточка упирается в 38rem, но
+       отступ продолжал уменьшаться, и область текста росла: при сужении
+       окна с 1100 до 700px строки перескакивали. Проверяем, что пока
+       карточка на максимуме, текстовая колонка не меняется. */
+    const textWidth = async (): Promise<number> =>
+      page.evaluate(() => {
+        const card = document.querySelector(".card")!;
+        const styles = getComputedStyle(card);
+        return (
+          card.clientWidth -
+          parseFloat(styles.paddingLeft) -
+          parseFloat(styles.paddingRight)
+        );
+      });
+
+    await page.setViewportSize({ width: 1100, height: 900 });
+    const wide = await textWidth();
+
+    await page.setViewportSize({ width: 800, height: 900 });
+    const narrow = await textWidth();
+
+    await page.setViewportSize({ width: 700, height: 900 });
+    const barely = await textWidth();
+
+    expect(wide).toBeGreaterThan(0);
+    expect(narrow, "текст не должен расширяться при сужении окна").toBe(wide);
+    expect(barely, "текст не должен расширяться при сужении окна").toBe(wide);
   });
 });
 
