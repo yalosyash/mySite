@@ -147,18 +147,24 @@ test.describe("Секция 'Обо мне'", () => {
     await expect(page.getByText(/Рассматриваю предложения/)).toBeVisible();
   });
 
-  test("Контакты видны на первом экране", async ({ page }) => {
-    /* Смысл переноса секции наверх: посетитель сразу видит и «кто я»,
-       и куда писать. Если контакты уедут под сгиб, вариант теряет смысл. */
-    const viewport = page.viewportSize();
-    const firstLink = page.locator(".link").first();
+  test("Все контакты видны сразу, без раскрытия", async ({ page }) => {
+    for (const link of await page.locator(".link").all()) {
+      await expect(link).toBeVisible();
+    }
+  });
 
-    await expect(firstLink).toBeInViewport();
+  test("Страница не прокручивается по горизонтали", async ({ page }) => {
+    /* Плитки контактов в две колонки не должны вылезать за карточку. */
+    const overflow = await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth -
+        document.documentElement.clientWidth,
+    );
 
-    const box = await firstLink.boundingBox();
-
-    expect(viewport).not.toBeNull();
-    expect(box!.y).toBeLessThan(viewport!.height);
+    expect(
+      overflow,
+      "горизонтальной прокрутки быть не должно",
+    ).toBeLessThanOrEqual(0);
   });
 });
 
