@@ -1,13 +1,7 @@
 import { test, expect, Page } from "@playwright/test";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
-import { elements, aboutSummary, aboutDetails } from "./ts/elements/elements";
-import { buttons } from "./ts/elements/buttons";
-
-const snapshotNames: Record<string, string> = {
-  "Обо мне": "AboutMe",
-  Свернуть: "Collapse",
-};
+import { elements, aboutSection } from "./ts/elements/elements";
 
 /**
  * Эталоны скриншотов привязаны к платформе (win32/linux), поэтому в репозитории
@@ -117,45 +111,33 @@ test.describe("Сравнение ссылок в списке ссылок", ()
   });
 });
 
-test.describe("Работоспособность кнопки 'Обо мне'", () => {
-  test("Секция 'Обо мне' скрыта по умолчанию", async ({ page }) => {
-    await expect(aboutDetails(page)).not.toHaveAttribute("open", /.*/);
-    await expect(page.getByText("более 500 автотестов")).toBeHidden();
+test.describe("Секция 'Обо мне'", () => {
+  test("Содержимое видно сразу, без раскрытия", async ({ page }) => {
+    await expect(aboutSection(page)).toBeVisible();
+    await expect(page.getByText("более 500 автотестов")).toBeVisible();
+    await expect(page.getByText("визуальную регрессию Canvas")).toBeVisible();
   });
 
-  test("Раскрытие и сворачивание секции 'Обо мне'", async ({ page }) => {
-    const summary = aboutSummary(page);
-    const details = aboutDetails(page);
+  test("Секция идёт перед блоком контактов", async ({ page }) => {
+    /* Сравниваем порядок в DOM, а не координаты: на широком экране блоки
+       стоят в две колонки, и вертикальные позиции у них совпадают. */
+    const order = await page.evaluate(() => {
+      const about = document.querySelector("section.about");
+      const contacts = document.querySelector(".contacts");
 
-    await summary.click();
+      if (!about || !contacts) {
+        return null;
+      }
 
-    await expect(details).toHaveAttribute("open", /.*/);
-    await expect(summary).toHaveText("Свернуть", { useInnerText: true });
-    await expect(
-      page.getByRole("region", { name: "Связь со мной" }),
-    ).toBeVisible();
-    await expect(page.getByText("более 500 автотестов")).toBeVisible();
+      const position = about.compareDocumentPosition(contacts);
 
-    await summary.click();
+      return position === Node.DOCUMENT_POSITION_FOLLOWING;
+    });
 
-    await expect(details).not.toHaveAttribute("open", /.*/);
-    await expect(summary).toHaveText("Обо мне", { useInnerText: true });
-    await expect(page.getByText("более 500 автотестов")).toBeHidden();
-  });
-
-  test("Секция 'Обо мне' раскрывается с клавиатуры", async ({ page }) => {
-    const summary = aboutSummary(page);
-
-    await summary.focus();
-    await page.keyboard.press("Enter");
-
-    await expect(aboutDetails(page)).toHaveAttribute("open", /.*/);
-    await expect(page.getByText("более 500 автотестов")).toBeVisible();
+    expect(order, "«Обо мне» должна идти раньше контактов").toBe(true);
   });
 
   test("В секции есть стек технологий и статус поиска", async ({ page }) => {
-    await aboutSummary(page).click();
-
     const stack = page.getByRole("list", { name: "Технологии" });
 
     await expect(stack).toBeVisible();
@@ -163,6 +145,20 @@ test.describe("Работоспособность кнопки 'Обо мне'",
     await expect(stack.getByText("Selenide", { exact: true })).toBeVisible();
     await expect(stack.getByText("Postman", { exact: true })).toBeVisible();
     await expect(page.getByText(/Рассматриваю предложения/)).toBeVisible();
+  });
+
+  test("Контакты видны на первом экране", async ({ page }) => {
+    /* Смысл переноса секции наверх: посетитель сразу видит и «кто я»,
+       и куда писать. Если контакты уедут под сгиб, вариант теряет смысл. */
+    const viewport = page.viewportSize();
+    const firstLink = page.locator(".link").first();
+
+    await expect(firstLink).toBeInViewport();
+
+    const box = await firstLink.boundingBox();
+
+    expect(viewport).not.toBeNull();
+    expect(box!.y).toBeLessThan(viewport!.height);
   });
 });
 
@@ -315,28 +311,15 @@ test.describe("Прокрутка", () => {
 });
 
 test.describe("Скриншоты страницы", () => {
-  buttons.forEach((value) => {
-    test(`Отображение изменения, при нажатии кнопки ${value}`, async ({
-      page,
-    }, testInfo) => {
-      skipIfNoBaseline(testInfo, `pageWith${snapshotNames[value]}Button`);
+  test("Отображение страницы", async ({ page }, testInfo) => {
+    skipIfNoBaseline(testInfo, "page");
 
-      if (value === "Свернуть") {
-        await aboutSummary(page).click();
-      }
-      await expect(page).toHaveScreenshot(
-        `pageWith${snapshotNames[value]}Button.png`,
-      );
-    });
+    await expect(page).toHaveScreenshot("page.png");
   });
 
-  /* Вьюпорт 1280x720 не достаёт до блока «Обо мне», поэтому его
-     содержимое снимаем отдельно — иначе правки секции не попадают
-     ни в один эталон. */
-  test("Отображение раскрытой секции «Обо мне»", async ({ page }, testInfo) => {
+  test("Отображение секции «Обо мне»", async ({ page }, testInfo) => {
     skipIfNoBaseline(testInfo, "aboutSection");
 
-    await aboutSummary(page).click();
-    await expect(aboutDetails(page)).toHaveScreenshot("aboutSection.png");
+    await expect(aboutSection(page)).toHaveScreenshot("aboutSection.png");
   });
 });

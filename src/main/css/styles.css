@@ -438,89 +438,16 @@ img {
   transform: translateY(0);
 }
 
-/* ---------- «Обо мне» на <details> ---------- */
+/* ---------- «Обо мне» ---------- */
+/* Секция без рамки: рядом с контактами (две колонки) она читается как
+   обычный блок страницы, а не как вложенная карточка. */
 .about {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--surface);
-  overflow: clip;
-}
-
-.about__summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.85rem 1.1rem;
-  cursor: pointer;
-  user-select: none;
-  font-size: 0.95rem;
-  font-weight: 600;
-  list-style: none;
-  transition: background-color 0.18s ease;
-}
-
-.about__summary::-webkit-details-marker {
-  display: none;
-}
-
-.about__summary-close {
-  display: none;
-}
-
-.about[open] .about__summary-open {
-  display: none;
-}
-
-.about[open] .about__summary-close {
-  display: inline;
-}
-
-.about__chevron {
-  box-sizing: border-box;
-  width: 1.75rem;
-  height: 1.75rem;
-  padding: 0.4rem;
-  flex: none;
-  color: var(--ink-muted);
-  background: var(--surface-2);
-  border-radius: 50%;
-  transition:
-    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-    color 0.18s ease,
-    background-color 0.18s ease;
-
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.about[open] .about__chevron {
-  color: var(--accent);
-  background: var(--accent-soft);
-  transform: rotate(180deg);
-}
-
-@media (hover: hover) {
-  .about__summary:hover {
-    background: var(--surface-2);
-  }
-}
-
-.about__body {
   display: grid;
   gap: 1rem;
-  padding: 1.15rem 1.1rem 1.1rem;
-  animation: soft-in 0.28s ease both;
 }
 
-.about__lead {
-  margin: 0;
-  font-size: 0.92rem;
-  line-height: 1.6;
-  color: var(--ink);
+.about .section__title {
+  margin-bottom: 0;
 }
 
 .about__list {
@@ -586,13 +513,6 @@ img {
   box-shadow: 0 0 0 3px color-mix(in srgb, #2fbf71 22%, transparent);
 }
 
-@keyframes soft-in {
-  from {
-    opacity: 0;
-    transform: translateY(-4px);
-  }
-}
-
 .about__dot {
   width: 6px;
   height: 6px;
@@ -600,6 +520,32 @@ img {
   border-radius: 50%;
   background: var(--accent);
   translate: 0 -0.15em;
+}
+
+/* ---------- Две колонки на широких экранах ---------- */
+/* «Обо мне» идёт первым, поэтому в одну колонку контакты уезжают под
+   сгиб: 933px против 800px вьюпорта. На широком экране ставим блоки
+   рядом — тогда и «кто я», и «куда писать» видны сразу. */
+@media (width >= 64rem) {
+  .card {
+    width: min(100%, 62rem);
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+
+  .hero {
+    grid-column: 1 / -1;
+  }
+
+  .about {
+    grid-row: 2;
+    grid-column: 1;
+  }
+
+  .contacts {
+    grid-row: 2;
+    grid-column: 2;
+  }
 }
 
 /* ---------- Футер ---------- */
@@ -620,7 +566,7 @@ img {
 }
 
 /* ---------- Фокус ---------- */
-:where(a, summary):focus-visible {
+:where(a):focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: var(--radius-sm);
@@ -659,8 +605,7 @@ img {
     padding: 0;
   }
 
-  .glow,
-  .about__chevron {
+  .glow {
     display: none;
   }
 
@@ -668,11 +613,6 @@ img {
     box-shadow: none;
     border: 1px solid #ccc;
     animation: none;
-  }
-
-  /* Печатаем содержимое «Обо мне» даже в свёрнутом виде */
-  .about__body {
-    display: grid !important;
   }
 }
 

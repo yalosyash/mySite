@@ -2,13 +2,11 @@ import { Locator, Page } from "@playwright/test";
 import { Elements } from "../interface/interfaces";
 
 /**
- * Раскрывающийся блок «Обо мне».
- * Реализован нативным <details>/<summary>, поэтому в тестах работаем с <summary>,
- * а состояние читаем с самого <details> (атрибут open).
+ * Секция «Обо мне»: обычный блок (не аккордеон), поэтому достаточно
+ * локатора самой секции.
  */
-export const aboutSummary = (page: Page): Locator => page.locator("summary");
-export const aboutDetails = (page: Page): Locator =>
-  page.locator("details.about");
+export const aboutSection = (page: Page): Locator =>
+  page.locator("section.about");
 
 export const elements: Elements[] = [
   {
@@ -82,9 +80,9 @@ export const elements: Elements[] = [
     },
   },
   {
-    locator: (page: Page): Locator => aboutSummary(page),
+    locator: (page: Page): Locator =>
+      page.getByRole("heading", { name: "Обо мне", level: 2 }),
     text: "Обо мне",
-    innerText: true,
-    name: "Обо мне summary",
+    name: "Обо мне heading",
   },
 ];
