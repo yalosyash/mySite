@@ -21,7 +21,7 @@
   /* Насыщенность световых пятен фона */
   --glow-accent: 55%;
   --glow-violet: 40%;
-  --grid-line: 55%;
+  --grid-line: 35%;
 
   /* Геометрия */
   --radius-lg: 28px;
