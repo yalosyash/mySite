@@ -435,6 +435,16 @@ img {
   text-align: center;
 }
 
+/* ---------- Яндекс.Метрика ---------- */
+/* Пиксель для посетителей без JavaScript: не должен влиять на вёрстку. */
+.metrika-pixel {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 /* ---------- Фокус ---------- */
 :where(a, summary):focus-visible {
   outline: 2px solid var(--accent);
