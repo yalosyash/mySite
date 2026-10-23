@@ -19,8 +19,9 @@
   --ring: color-mix(in srgb, var(--accent) 45%, transparent);
 
   /* Насыщенность световых пятен фона */
-  --glow-accent: 30%;
-  --glow-violet: 22%;
+  --glow-accent: 55%;
+  --glow-violet: 40%;
+  --grid-line: 55%;
 
   /* Геометрия */
   --radius-lg: 28px;
@@ -55,6 +56,7 @@
     --border: #263041;
     --glow-accent: 16%;
     --glow-violet: 12%;
+    --grid-line: 55%;
     --shadow-card:
       0 1px 2px rgb(0 0 0 / 0.4), 0 16px 40px -16px rgb(0 0 0 / 0.6);
     --shadow-hover:
@@ -73,6 +75,7 @@
   --border: #263041;
   --glow-accent: 16%;
   --glow-violet: 12%;
+  --grid-line: 55%;
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 16px 40px -16px rgb(0 0 0 / 0.6);
   --shadow-hover:
     0 2px 6px rgb(0 0 0 / 0.45), 0 24px 54px -20px rgb(0 0 0 / 0.75);
@@ -107,14 +110,14 @@ body {
 
   background-image:
     radial-gradient(
-      60rem 40rem at 15% -10%,
+      52rem 34rem at 12% -6%,
       color-mix(in srgb, var(--accent) var(--glow-accent), transparent),
-      transparent 65%
+      transparent 62%
     ),
     radial-gradient(
-      45rem 30rem at 105% 10%,
+      40rem 26rem at 108% 6%,
       color-mix(in srgb, #7b3cff var(--glow-violet), transparent),
-      transparent 70%
+      transparent 65%
     );
   background-attachment: fixed;
   background-repeat: no-repeat;
@@ -150,16 +153,22 @@ img {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background-image: linear-gradient(
-    to right,
-    color-mix(in srgb, var(--border) 55%, transparent) 1px,
-    transparent 1px
-  );
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--accent) var(--grid-line), transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--accent) var(--grid-line), transparent) 1px,
+      transparent 1px
+    );
   background-size: 96px 96px;
   mask-image: radial-gradient(
-    ellipse 80% 60% at 50% 0%,
-    #000 20%,
-    transparent 75%
+    ellipse 85% 65% at 50% 0%,
+    #000 25%,
+    transparent 80%
   );
 }
 
