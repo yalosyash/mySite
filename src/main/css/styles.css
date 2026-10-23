@@ -14,9 +14,13 @@
   --ink-muted: #5a6472;
   --surface: #ffffff;
   --surface-2: #f4f6fa;
-  --page: #eef1f6;
+  --page: #ffffff;
   --border: #dfe4ec;
   --ring: color-mix(in srgb, var(--accent) 45%, transparent);
+
+  /* Насыщенность световых пятен фона */
+  --glow-accent: 30%;
+  --glow-violet: 22%;
 
   /* Геометрия */
   --radius-lg: 28px;
@@ -49,6 +53,8 @@
     --surface-2: #1b222d;
     --page: #0b0e14;
     --border: #263041;
+    --glow-accent: 16%;
+    --glow-violet: 12%;
     --shadow-card:
       0 1px 2px rgb(0 0 0 / 0.4), 0 16px 40px -16px rgb(0 0 0 / 0.6);
     --shadow-hover:
@@ -65,6 +71,8 @@
   --surface-2: #1b222d;
   --page: #0b0e14;
   --border: #263041;
+  --glow-accent: 16%;
+  --glow-violet: 12%;
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 16px 40px -16px rgb(0 0 0 / 0.6);
   --shadow-hover:
     0 2px 6px rgb(0 0 0 / 0.45), 0 24px 54px -20px rgb(0 0 0 / 0.75);
@@ -100,15 +108,16 @@ body {
   background-image:
     radial-gradient(
       60rem 40rem at 15% -10%,
-      color-mix(in srgb, var(--accent) 16%, transparent),
+      color-mix(in srgb, var(--accent) var(--glow-accent), transparent),
       transparent 65%
     ),
     radial-gradient(
       45rem 30rem at 105% 10%,
-      color-mix(in srgb, #7b3cff 12%, transparent),
+      color-mix(in srgb, #7b3cff var(--glow-violet), transparent),
       transparent 70%
     );
   background-attachment: fixed;
+  background-repeat: no-repeat;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
