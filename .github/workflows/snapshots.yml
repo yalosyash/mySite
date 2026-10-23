@@ -20,6 +20,14 @@ jobs:
   update-snapshots:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    # Тот же образ, что и в основном прогоне: эталоны должны сниматься в
+    # том же окружении, иначе шрифты и рендеринг разойдутся. Иначе шаг
+    # `install --with-deps` ставит через apt ~40 системных пакетов.
+    # ВАЖНО: тег должен совпадать с версией @playwright/test в
+    # package-lock.json.
+    container:
+      image: mcr.microsoft.com/playwright:v1.59.0-noble
+      options: --user 1001
     steps:
       - uses: actions/checkout@v4
 
@@ -30,9 +38,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
 
       - name: Update snapshots
         run: npx playwright test --grep "Скриншоты" --update-snapshots=all
