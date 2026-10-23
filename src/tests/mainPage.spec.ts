@@ -358,4 +358,14 @@ test.describe("Скриншоты страницы", () => {
 
     await expect(aboutSection(page)).toHaveScreenshot("aboutSection.png");
   });
+
+  /* Блок контактов ниже сгиба и не попадает ни в один эталон: правки
+     иконок и плиток проходили незамеченными. Снимаем его отдельно. */
+  test("Отображение блока контактов", async ({ page }, testInfo) => {
+    skipIfNoBaseline(testInfo, "contactsSection");
+
+    await expect(page.locator(".contacts")).toHaveScreenshot(
+      "contactsSection.png",
+    );
+  });
 });
