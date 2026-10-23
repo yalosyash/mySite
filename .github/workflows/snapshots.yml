@@ -1,0 +1,45 @@
+name: Update Linux Snapshots
+
+# Эталоны скриншотов привязаны к платформе (win32/linux), а локально есть только
+# Windows. Этот воркфлоу запускается вручную (Actions -> Run workflow) на
+# ubuntu-latest, генерирует linux-эталоны и отдаёт их артефактом.
+# Скачанный архив нужно распаковать в src/tests/mainPage.spec.ts-snapshots
+# и закоммитить — после этого основной прогон тестов сравнивает с ними.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: snapshots-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  update-snapshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Update snapshots
+        run: npx playwright test --grep "Скриншоты" --update-snapshots
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: linux-snapshots
+          path: src/tests/mainPage.spec.ts-snapshots/*-linux.png
+          retention-days: 30
+          if-no-files-found: error

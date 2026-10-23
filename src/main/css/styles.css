@@ -1,0 +1,517 @@
+/* ==========================================================================
+   Владислав Клепиков — визитка
+   Стили: CSS custom properties, clamp(), Grid, :has(), prefers-*
+   ========================================================================== */
+
+/* ---------- Токены ---------- */
+:root {
+  color-scheme: light dark;
+
+  /* Палитра */
+  --accent: #145cff;
+  --accent-soft: #e8eefc;
+  --ink: #0d1117;
+  --ink-muted: #5a6472;
+  --surface: #ffffff;
+  --surface-2: #f4f6fa;
+  --page: #eef1f6;
+  --border: #dfe4ec;
+  --ring: color-mix(in srgb, var(--accent) 45%, transparent);
+
+  /* Геометрия */
+  --radius-lg: 28px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+  --gap: clamp(0.75rem, 1.5vw, 1rem);
+  --page-pad: clamp(1rem, 5vw, 2.5rem);
+
+  /* Типографика */
+  --font-sans:
+    "Inter", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system,
+    "Helvetica Neue", Arial, sans-serif;
+  --tracking-tight: -0.025em;
+
+  /* Тени */
+  --shadow-card:
+    0 1px 2px rgb(13 17 23 / 0.04), 0 12px 32px -12px rgb(13 17 23 / 0.14);
+  --shadow-hover:
+    0 2px 4px rgb(13 17 23 / 0.05), 0 20px 45px -18px rgb(13 17 23 / 0.25);
+}
+
+/* Тёмная тема: системная настройка или явный переключатель */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --accent: #6d9bff;
+    --accent-soft: #182338;
+    --ink: #eef2f8;
+    --ink-muted: #99a4b5;
+    --surface: #141922;
+    --surface-2: #1b222d;
+    --page: #0b0e14;
+    --border: #263041;
+    --shadow-card:
+      0 1px 2px rgb(0 0 0 / 0.4), 0 16px 40px -16px rgb(0 0 0 / 0.6);
+    --shadow-hover:
+      0 2px 6px rgb(0 0 0 / 0.45), 0 24px 54px -20px rgb(0 0 0 / 0.75);
+  }
+}
+
+:root[data-theme="dark"] {
+  --accent: #6d9bff;
+  --accent-soft: #182338;
+  --ink: #eef2f8;
+  --ink-muted: #99a4b5;
+  --surface: #141922;
+  --surface-2: #1b222d;
+  --page: #0b0e14;
+  --border: #263041;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 16px 40px -16px rgb(0 0 0 / 0.6);
+  --shadow-hover:
+    0 2px 6px rgb(0 0 0 / 0.45), 0 24px 54px -20px rgb(0 0 0 / 0.75);
+}
+
+/* ---------- Сброс ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scrollbar-gutter: stable;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  padding: var(--page-pad);
+  display: grid;
+  grid-template-rows: 1fr auto;
+  place-items: center;
+  gap: 1.5rem;
+
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--ink);
+  background-color: var(--page);
+
+  background-image:
+    radial-gradient(
+      60rem 40rem at 15% -10%,
+      color-mix(in srgb, var(--accent) 16%, transparent),
+      transparent 65%
+    ),
+    radial-gradient(
+      45rem 30rem at 105% 10%,
+      color-mix(in srgb, #7b3cff 12%, transparent),
+      transparent 70%
+    );
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+p,
+ul {
+  margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* ---------- Орнамент фона ---------- */
+.glow {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--border) 55%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 96px 96px;
+  mask-image: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    #000 20%,
+    transparent 75%
+  );
+}
+
+/* ---------- Карточка ---------- */
+.card {
+  width: min(100%, 38rem);
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 2.5rem);
+
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(18px) saturate(140%);
+  animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.99);
+  }
+}
+
+/* ---------- Шапка ---------- */
+.hero {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 0.75rem;
+}
+
+.hero__avatar {
+  width: clamp(5.5rem, 22vw, 7.5rem);
+  height: clamp(5.5rem, 22vw, 7.5rem);
+  object-fit: cover;
+  border-radius: 50%;
+  padding: 3px;
+  background: linear-gradient(
+    140deg,
+    var(--accent),
+    color-mix(in srgb, #7b3cff 70%, var(--accent))
+  );
+  box-shadow: 0 10px 30px -12px
+    color-mix(in srgb, var(--accent) 75%, transparent);
+}
+
+.hero__eyebrow {
+  justify-self: center;
+  margin-top: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 999px;
+}
+
+.hero__title {
+  font-size: clamp(1.6rem, 5vw, 2.15rem);
+  line-height: 1.15;
+  letter-spacing: var(--tracking-tight);
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.hero__lead {
+  max-width: 34ch;
+  font-size: clamp(0.9rem, 2.4vw, 0.98rem);
+  color: var(--ink-muted);
+  text-wrap: pretty;
+}
+
+/* ---------- Заголовки секций ---------- */
+.section__title {
+  margin-bottom: 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+/* ---------- Ссылки ---------- */
+.links {
+  display: grid;
+  gap: var(--gap);
+}
+
+.link {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.9rem;
+
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+
+  transition:
+    transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.link__icon {
+  box-sizing: border-box;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.68rem;
+  flex: none;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.link__body {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.link__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.link__value {
+  overflow: hidden;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.link__arrow {
+  font-size: 0.95rem;
+  color: var(--ink-muted);
+  transition:
+    transform 0.18s ease,
+    color 0.18s ease;
+}
+
+/* Ховер только там, где он есть */
+@media (hover: hover) {
+  .link:hover {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+    box-shadow: var(--shadow-hover);
+  }
+
+  .link:hover .link__arrow {
+    color: var(--accent);
+    transform: translate(2px, -2px);
+  }
+}
+
+.link:active {
+  transform: translateY(0);
+}
+
+/* ---------- «Обо мне» на <details> ---------- */
+.about {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  overflow: clip;
+}
+
+.about__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.95rem 1.1rem;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  list-style: none;
+  transition: background-color 0.18s ease;
+}
+
+.about__summary::-webkit-details-marker {
+  display: none;
+}
+
+.about__summary-close {
+  display: none;
+}
+
+.about[open] .about__summary-open {
+  display: none;
+}
+
+.about[open] .about__summary-close {
+  display: inline;
+}
+
+.about__chevron {
+  box-sizing: border-box;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0.4rem;
+  flex: none;
+  color: var(--ink-muted);
+  background: var(--surface-2);
+  border-radius: 50%;
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.18s ease,
+    background-color 0.18s ease;
+
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.about[open] .about__chevron {
+  color: var(--accent);
+  background: var(--accent-soft);
+  transform: rotate(180deg);
+}
+
+@media (hover: hover) {
+  .about__summary:hover {
+    background: var(--surface-2);
+  }
+}
+
+.about__list {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0 1.1rem 1.1rem;
+  animation: soft-in 0.28s ease both;
+}
+
+@keyframes soft-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.about__item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.65rem;
+  font-size: 0.92rem;
+  color: var(--ink-muted);
+}
+
+.about__dot {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--accent);
+  translate: 0 -0.15em;
+}
+
+/* ---------- Футер ---------- */
+.site-footer {
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  text-align: center;
+}
+
+/* ---------- Фокус ---------- */
+:where(a, summary):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.link:focus-visible {
+  outline-offset: 2px;
+}
+
+/* ---------- Малые экраны ---------- */
+@media (width < 27rem) {
+  body {
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+  }
+
+  .link__icon {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .link {
+    padding: 0.75rem 0.85rem;
+    gap: 0.7rem;
+  }
+}
+
+/* ---------- Печать ---------- */
+@media print {
+  body {
+    background: #fff;
+    padding: 0;
+  }
+
+  .glow,
+  .about__chevron {
+    display: none;
+  }
+
+  .card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    animation: none;
+  }
+
+  .about__list {
+    display: grid !important;
+  }
+}
+
+/* ---------- Доступность: меньше движения ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- Принудительные цвета ---------- */
+@media (forced-colors: active) {
+  .card,
+  .link,
+  .about {
+    border: 1px solid CanvasText;
+  }
+
+  .hero__avatar {
+    border: 1px solid CanvasText;
+  }
+}

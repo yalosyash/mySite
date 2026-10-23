@@ -1,34 +1,43 @@
 import { Locator, Page } from "@playwright/test";
 import { Elements } from "../interface/interfaces";
 
+/**
+ * Раскрывающийся блок «Обо мне».
+ * Реализован нативным <details>/<summary>, поэтому в тестах работаем с <summary>,
+ * а состояние читаем с самого <details> (атрибут open).
+ */
+export const aboutSummary = (page: Page): Locator => page.locator("summary");
+export const aboutDetails = (page: Page): Locator =>
+  page.locator("details.about");
+
 export const elements: Elements[] = [
   {
-    locator: (page: Page): Locator => page.getByRole("img", { name: "avatar" }),
+    locator: (page: Page): Locator =>
+      page.getByRole("img", { name: "Владислав Клепиков" }),
     name: "avatar img",
   },
   {
     locator: (page: Page): Locator =>
-      page.getByRole("heading", { name: "QA Engineer" }),
+      page.getByText("QA Engineer", { exact: true }),
     text: "QA Engineer",
-    name: "QA Engineer heading",
+    name: "QA Engineer badge",
   },
   {
     locator: (page: Page): Locator =>
-      page.getByRole("heading", { name: "Владислав Клепиков" }),
+      page.getByRole("heading", { name: "Владислав Клепиков", level: 1 }),
     text: "Владислав Клепиков",
     name: "Владислав Клепиков heading",
   },
   {
     locator: (page: Page): Locator =>
-      page.getByRole("heading", { name: "Связь со мной" }),
+      page.getByRole("heading", { name: "Связь со мной", level: 2 }),
     text: "Связь со мной",
     name: "Связь со мной heading",
   },
-
   {
     locator: (page: Page): Locator =>
-      page.getByRole("link", { name: "@yalosyash" }),
-    name: "@yalosyash",
+      page.getByRole("link", { name: "Телеграм @yalosyash" }),
+    name: "Telegram",
     attribute: {
       type: "href",
       value: "https://t.me/yalosyash",
@@ -36,7 +45,7 @@ export const elements: Elements[] = [
   },
   {
     locator: (page: Page): Locator =>
-      page.getByRole("link", { name: "ya.losyash@yandex.ru" }),
+      page.getByRole("link", { name: "Эл. почта ya.losyash@yandex.ru" }),
     name: "email",
     attribute: {
       type: "href",
@@ -45,7 +54,7 @@ export const elements: Elements[] = [
   },
   {
     locator: (page: Page): Locator =>
-      page.getByRole("link", { name: "Vladislav Klepikov" }),
+      page.getByRole("link", { name: "GitHub Vladislav Klepikov" }),
     name: "GitHub",
     attribute: {
       type: "href",
@@ -54,10 +63,7 @@ export const elements: Elements[] = [
   },
   {
     locator: (page: Page): Locator =>
-      page
-        .getByRole("listitem")
-        .filter({ hasText: "Head Hunter Владислав Клепиков" })
-        .getByRole("link"),
+      page.getByRole("link", { name: "Head Hunter Владислав Клепиков" }),
     name: "Head Hunter",
     attribute: {
       type: "href",
@@ -67,11 +73,8 @@ export const elements: Elements[] = [
   },
   {
     locator: (page: Page): Locator =>
-      page
-        .getByRole("listitem")
-        .filter({ hasText: "Мое Резюме Владислав Клепиков" })
-        .getByRole("link"),
-    name: "Мое Резюме",
+      page.getByRole("link", { name: "Мое резюме Google Docs" }),
+    name: "Мое резюме",
     attribute: {
       type: "href",
       value:
@@ -79,9 +82,9 @@ export const elements: Elements[] = [
     },
   },
   {
-    locator: (page: Page): Locator =>
-      page.getByRole("button", { name: "Обо мне" }),
+    locator: (page: Page): Locator => aboutSummary(page),
     text: "Обо мне",
-    name: "Обо мне button",
+    innerText: true,
+    name: "Обо мне summary",
   },
 ];

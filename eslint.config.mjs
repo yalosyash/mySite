@@ -17,9 +17,13 @@ export default tseslint.config(
     },
   },
   {
+    /* Счётчик Метрики — браузерный код, вставляется как есть */
     files: ["src/main/js/**/*.js"],
     languageOptions: {
-      globals: { ...globals.browser },
+      globals: { ...globals.browser, ym: "readonly" },
+    },
+    rules: {
+      "@typescript-eslint/no-unused-expressions": "off",
     },
   },
   eslintConfigPrettier,
