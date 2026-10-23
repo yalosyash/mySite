@@ -339,7 +339,7 @@ img {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.95rem 1.1rem;
+  padding: 0.85rem 1.1rem;
   cursor: pointer;
   user-select: none;
   font-size: 0.95rem;
@@ -400,7 +400,7 @@ img {
 .about__list {
   display: grid;
   gap: 0.65rem;
-  padding: 0 1.1rem 1.1rem;
+  padding: 1.15rem 1.1rem 1.1rem;
   animation: soft-in 0.28s ease both;
 }
 
