@@ -30,24 +30,28 @@ function snapshotPath(
 
 /**
  * Запущен ли прогон в режиме обновления эталонов (`--update-snapshots` / `-u`).
- * Значение `config.updateSnapshots` для этого не годится: по умолчанию оно
- * равно "missing" и в обычном прогоне тоже.
+ *
+ * Читаем `updateSnapshots` из конфига теста, а не из `process.argv`: воркер
+ * Playwright запускается отдельным процессом, где `argv` содержит только путь
+ * к node и к самому Playwright — флагов CLI там нет. При обычном прогоне
+ * значение равно "missing", при `--update-snapshots` — "missing" тоже
+ * (флаг без значения), поэтому отличаем их по "all" и "changed".
  */
-function isUpdatingSnapshots(): boolean {
-  return process.argv.some(
-    (arg) =>
-      arg === "-u" ||
-      arg === "--update-snapshots" ||
-      arg.startsWith("--update-snapshots="),
-  );
+function isUpdatingSnapshots(testInfo: {
+  config: { updateSnapshots: string };
+}): boolean {
+  return testInfo.config.updateSnapshots !== "missing";
 }
 
 function skipIfNoBaseline(
-  testInfo: { project: { name: string } },
+  testInfo: {
+    project: { name: string };
+    config: { updateSnapshots: string };
+  },
   name: string,
 ): void {
   test.skip(
-    !isUpdatingSnapshots() && !existsSync(snapshotPath(testInfo, name)),
+    !isUpdatingSnapshots(testInfo) && !existsSync(snapshotPath(testInfo, name)),
     `Нет эталона для платформы ${process.platform}. Запустите "Update Linux Snapshots" в GitHub Actions и закоммитьте артефакт.`,
   );
 }
@@ -116,7 +120,7 @@ test.describe("Сравнение ссылок в списке ссылок", ()
 test.describe("Работоспособность кнопки 'Обо мне'", () => {
   test("Секция 'Обо мне' скрыта по умолчанию", async ({ page }) => {
     await expect(aboutDetails(page)).not.toHaveAttribute("open", /.*/);
-    await expect(page.getByText("Практикующий QA Automation")).toBeHidden();
+    await expect(page.getByText("около 500 автотестов")).toBeHidden();
   });
 
   test("Раскрытие и сворачивание секции 'Обо мне'", async ({ page }) => {
@@ -130,13 +134,13 @@ test.describe("Работоспособность кнопки 'Обо мне'",
     await expect(
       page.getByRole("region", { name: "Связь со мной" }),
     ).toBeVisible();
-    await expect(page.getByText("Практикующий QA Automation")).toBeVisible();
+    await expect(page.getByText("около 500 автотестов")).toBeVisible();
 
     await summary.click();
 
     await expect(details).not.toHaveAttribute("open", /.*/);
     await expect(summary).toHaveText("Обо мне", { useInnerText: true });
-    await expect(page.getByText("Практикующий QA Automation")).toBeHidden();
+    await expect(page.getByText("около 500 автотестов")).toBeHidden();
   });
 
   test("Секция 'Обо мне' раскрывается с клавиатуры", async ({ page }) => {
@@ -146,7 +150,19 @@ test.describe("Работоспособность кнопки 'Обо мне'",
     await page.keyboard.press("Enter");
 
     await expect(aboutDetails(page)).toHaveAttribute("open", /.*/);
-    await expect(page.getByText("Практикующий QA Automation")).toBeVisible();
+    await expect(page.getByText("около 500 автотестов")).toBeVisible();
+  });
+
+  test("В секции есть стек технологий и статус поиска", async ({ page }) => {
+    await aboutSummary(page).click();
+
+    const stack = page.getByRole("list", { name: "Технологии" });
+
+    await expect(stack).toBeVisible();
+    await expect(stack.getByText("Java", { exact: true })).toBeVisible();
+    await expect(stack.getByText("Selenide", { exact: true })).toBeVisible();
+    await expect(stack.getByText("Postman", { exact: true })).toBeVisible();
+    await expect(page.getByText(/Рассматриваю предложения/)).toBeVisible();
   });
 });
 
@@ -312,5 +328,15 @@ test.describe("Скриншоты страницы", () => {
         `pageWith${snapshotNames[value]}Button.png`,
       );
     });
+  });
+
+  /* Вьюпорт 1280x720 не достаёт до блока «Обо мне», поэтому его
+     содержимое снимаем отдельно — иначе правки секции не попадают
+     ни в один эталон. */
+  test("Отображение раскрытой секции «Обо мне»", async ({ page }, testInfo) => {
+    skipIfNoBaseline(testInfo, "aboutSection");
+
+    await aboutSummary(page).click();
+    await expect(aboutDetails(page)).toHaveScreenshot("aboutSection.png");
   });
 });
