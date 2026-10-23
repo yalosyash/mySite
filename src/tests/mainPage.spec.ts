@@ -258,6 +258,46 @@ test.describe("Переключатель темы", () => {
   });
 });
 
+test.describe("Прокрутка", () => {
+  test("При перезагрузке страница не прокручивается вниз", async ({ page }) => {
+    /* Фиксируем самый глубокий скролл за всю перезагрузку, а не только
+       итоговое значение: скачок происходит во время анимации появления
+       карточки, которую Chromium принимает за сдвиг контента и
+       компенсирует автоматической прокруткой. Проба ставится через
+       addInitScript, иначе она исчезнет вместе с документом при reload. */
+    await page.addInitScript(() => {
+      const state = { max: 0 };
+
+      (window as unknown as { __scrollProbe: typeof state }).__scrollProbe =
+        state;
+
+      const t0 = performance.now();
+      const tick = (): void => {
+        state.max = Math.max(state.max, Math.round(window.scrollY));
+        if (performance.now() - t0 < 2000) {
+          requestAnimationFrame(tick);
+        }
+      };
+      requestAnimationFrame(tick);
+    });
+
+    await openPage(page);
+    await page.waitForTimeout(300);
+    await page.evaluate(() => window.scrollTo(0, 0));
+
+    await page.reload({ waitUntil: "load" });
+    await page.waitForTimeout(1200);
+
+    const probe = await page.evaluate(
+      () =>
+        (window as unknown as { __scrollProbe?: { max: number } }).__scrollProbe
+          ?.max ?? 0,
+    );
+
+    expect(probe, "страница не должна уезжать вниз при перезагрузке").toBe(0);
+  });
+});
+
 test.describe("Скриншоты страницы", () => {
   buttons.forEach((value) => {
     test(`Отображение изменения, при нажатии кнопки ${value}`, async ({

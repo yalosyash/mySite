@@ -21,7 +21,7 @@
   /* Насыщенность световых пятен фона */
   --glow-accent: 55%;
   --glow-violet: 40%;
-  --grid-line: 35%;
+  --grid-line: 15%;
 
   /* Геометрия */
   --radius-lg: 28px;
@@ -178,6 +178,13 @@ img {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   backdrop-filter: blur(18px) saturate(140%);
+
+  /* Анимация появления сдвигает карточку вниз, а Chromium считает это
+     "сдвигом контента" и компенсирует его скроллом — страница сама
+     прокручивается на ~19px при перезагрузке. Отключаем привязку
+     только здесь, чтобы не задеть остальную страницу. */
+  overflow-anchor: none;
+
   animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
